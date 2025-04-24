@@ -1,63 +1,87 @@
 "use client";
 
-import { AdvancedMarker, APIProvider, Map } from "@vis.gl/react-google-maps";
+import Maps from "../../../components/maps";
+import PartnerList from "../../../components/partner-list";
+import Searchbar from "../../../components/searchbar";
+import { Partner, Service } from "./partner";
 
-export default function Home() {
+export default function ResultView() {
     const availableServices = [{ label: "Socken flicken", group: "Schneider" }];
 
-    const partner = [
+    const partner: Partner[] = [
         {
+            id: "1",
             name: "Schneiderei Mustermann",
             lat: 47.733333,
             lng: 10.316667,
+            rating: 3.2,
+            adress: "Musterstraße 2, 12345 Musterstadt",
+            services: new Map<string, Service>([
+                [
+                    "Socken flicken",
+                    {
+                        description:
+                            "Die Socken werden maschinell schnell zusammengeflickt.",
+                        price: 4,
+                    },
+                ],
+            ]),
         },
         {
+            id: "2",
             name: "Schreinerei Müller",
             lat: 47.719008,
             lng: 10.297393,
+            rating: 4.5,
+            adress: "Müllerstraße 1, 12345 Musterstadt",
+            services: new Map<string, Service>([
+                [
+                    "Socken flicken",
+                    {
+                        description:
+                            "Die Socken werden mit einer feinen Nadel in Handarbeit zusammengenäht.",
+                        price: 5,
+                    },
+                ],
+            ]),
         },
     ];
 
     return (
-        <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}>
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                gap: "32px",
+                height: "100%",
+            }}
+        >
             <div
+                className="result-list"
                 style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    height: "100vh",
+                    width: "calc(50% - 16px)",
+                    overflowX: "hidden",
+                    paddingLeft: "16px",
                 }}
             >
-                <Map
-                    style={{ width: 500, height: 500 }}
-                    defaultCenter={{ lat: 47.733333, lng: 10.316667 }}
-                    defaultZoom={14}
-                    gestureHandling={"greedy"}
-                    disableDefaultUI={true}
-                    minZoom={13}
-                    mapId={"TEST_MAP"}
-                    restriction={{
-                        latLngBounds: {
-                            north: 47.77,
-                            south: 47.68,
-                            east: 10.36,
-                            west: 10.27,
-                        },
+                <Searchbar></Searchbar>
+                <div
+                    style={{
+                        paddingTop: "32px",
                     }}
                 >
-                    {partner.map((p) => (
-                        <AdvancedMarker
-                            key={p.name}
-                            position={{ lat: p.lat, lng: p.lng }}
-                            title={p.name}
-                            onClick={() => {
-                                window.location.href = "/map";
-                            }}
-                        />
-                    ))}
-                </Map>
+                    <PartnerList partner={partner}></PartnerList>
+                </div>
             </div>
-        </APIProvider>
+            <div
+                className="map-container"
+                style={{
+                    width: "50%",
+                }}
+            >
+                <Maps partner={partner}></Maps>
+            </div>
+        </div>
     );
 }
