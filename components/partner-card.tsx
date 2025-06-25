@@ -77,7 +77,11 @@ export default function PartnerCard({
                             objectFit: "cover",
                         }}
                     />
-                    <Button variant="contained" style={{ marginTop: "12px" }}>
+                    <Button
+                        variant="contained"
+                        style={{ marginTop: "12px" }}
+                        onClick={() => (window.location.href = "/booking")}
+                    >
                         Book
                     </Button>
                 </div>

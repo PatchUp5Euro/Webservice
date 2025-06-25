@@ -5,6 +5,12 @@ export type Partner = {
     lng: number;
     adress: string;
     rating?: number;
+    ratingCount?: number;
+    image?: string;
+    description?: string;
+    openingHours?: string;
+    phone?: string;
+    email?: string;
     services: Map<string, Service>;
 }
 
