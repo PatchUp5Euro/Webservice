@@ -48,14 +48,22 @@ export default function PartnerCard({
                         />
                     </div>
                     <p>{partner.adress}</p>
-                    <p>{partner.services.get("Socken flicken")?.description}</p>
-                    <h1
-                        style={{
-                            margin: 0,
-                        }}
-                    >
-                        {partner.services.get("Socken flicken")?.price}€
-                    </h1>
+                    <div style={{ marginTop: 8 }}>
+                        {[...partner.services.entries()].map(
+                            ([serviceName, service]) => (
+                                <div
+                                    key={serviceName}
+                                    style={{ marginBottom: 8 }}
+                                >
+                                    <strong>{serviceName}</strong>:{" "}
+                                    {service.description}{" "}
+                                    <span style={{ fontWeight: 600 }}>
+                                        {service.price}€
+                                    </span>
+                                </div>
+                            )
+                        )}
+                    </div>
                 </div>
                 <div
                     className="partner-card-right"
@@ -67,6 +75,7 @@ export default function PartnerCard({
                 >
                     <img
                         src={
+                            partner.image ||
                             "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/M%C3%BCnster%2C_LVM%2C_B%C3%BCrogeb%C3%A4ude_--_2013_--_5149-51.jpg/1200px-M%C3%BCnster%2C_LVM%2C_B%C3%BCrogeb%C3%A4ude_--_2013_--_5149-51.jpg"
                         }
                         alt={partner.name}

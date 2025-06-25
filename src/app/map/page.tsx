@@ -1,51 +1,24 @@
 "use client";
 
+import { Divider } from "@mui/material";
+import { useSearchParams } from "next/navigation";
 import Maps from "../../../components/maps";
 import PartnerList from "../../../components/partner-list";
 import Searchbar from "../../../components/searchbar";
-import { Partner, Service } from "./partner";
+import { getExampleData } from "./example-data";
+import { Partner } from "./partner";
 
 export default function ResultView() {
-    const availableServices = [{ label: "Socken flicken", group: "Schneider" }];
+    const searchParams = useSearchParams();
+    const selectedService = searchParams.get("service");
+    const allPartners: Partner[] = getExampleData();
+    const filteredPartners = selectedService
+        ? allPartners.filter((p) =>
+              Array.from(p.services.keys()).includes(selectedService)
+          )
+        : allPartners;
 
-    const partner: Partner[] = [
-        {
-            id: "1",
-            name: "Schneiderei Mustermann",
-            lat: 47.733333,
-            lng: 10.316667,
-            rating: 3.2,
-            adress: "Musterstraße 2, 12345 Musterstadt",
-            services: new Map<string, Service>([
-                [
-                    "Socken flicken",
-                    {
-                        description:
-                            "Die Socken werden maschinell schnell zusammengeflickt.",
-                        price: 4,
-                    },
-                ],
-            ]),
-        },
-        {
-            id: "2",
-            name: "Schreinerei Müller",
-            lat: 47.719008,
-            lng: 10.297393,
-            rating: 4.5,
-            adress: "Müllerstraße 1, 12345 Musterstadt",
-            services: new Map<string, Service>([
-                [
-                    "Socken flicken",
-                    {
-                        description:
-                            "Die Socken werden mit einer feinen Nadel in Handarbeit zusammengenäht.",
-                        price: 5,
-                    },
-                ],
-            ]),
-        },
-    ];
+    const availableServices = [{ label: "Socken flicken", group: "Schneider" }];
 
     return (
         <div
@@ -54,7 +27,8 @@ export default function ResultView() {
                 flexDirection: "row",
                 justifyContent: "space-between",
                 gap: "32px",
-                height: "100%",
+                height: "100vh",
+                fontFamily: "var(--font-geist-sans)",
             }}
         >
             <div
@@ -65,13 +39,42 @@ export default function ResultView() {
                     paddingLeft: "16px",
                 }}
             >
+                <h2
+                    style={{
+                        fontSize: 28,
+                        fontWeight: 600,
+                        margin: 0,
+                        marginTop: 32,
+                        marginBottom: 8,
+                    }}
+                >
+                    Finde Partner in deiner Nähe
+                </h2>
+                <p
+                    style={{
+                        color: "#555",
+                        margin: 0,
+                        marginBottom: 24,
+                        fontSize: 16,
+                        maxWidth: 420,
+                    }}
+                >
+                    Suche nach Dienstleistungen und entdecke lokale Anbieter auf
+                    der Karte.
+                </p>
                 <Searchbar></Searchbar>
                 <div
                     style={{
                         paddingTop: "32px",
                     }}
+                ></div>
+                <Divider></Divider>
+                <div
+                    style={{
+                        paddingTop: "16px",
+                    }}
                 >
-                    <PartnerList partner={partner}></PartnerList>
+                    <PartnerList partner={filteredPartners}></PartnerList>
                 </div>
             </div>
             <div
@@ -80,7 +83,7 @@ export default function ResultView() {
                     width: "50%",
                 }}
             >
-                <Maps partner={partner}></Maps>
+                <Maps partner={filteredPartners}></Maps>
             </div>
         </div>
     );
